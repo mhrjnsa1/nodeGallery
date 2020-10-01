@@ -6,14 +6,14 @@ const Pdfgenerate = require("pdfkit");
 exports.viewGallery = (req, res, next) => {
   GalleryModels.findOne().then((result) => {
     if (result) {
-      res.render("gallery", {
+      res.render("showGallery", {
         username: result.name,
         _id: result._id,
         galleryCollection: result.image,
         galleryLength: result.image.length,
       });
     } else {
-      res.render("gallery", {
+      res.render("showGallery", {
         galleryLength: 0,
       });
     }
@@ -40,9 +40,9 @@ exports.removeImage = (req, res, next) => {
           fs.unlink(imageId, (err) => {
             if (err) throw err;
           });
-          res.redirect("/gallery");
+          res.redirect("/showGallery");
         } else {
-          res.redirect("/gallery");
+          res.redirect("/showGallery");
         }
       })
       .catch((error) => {
@@ -73,7 +73,7 @@ exports.editImageView = (req, res, next) => {
           message: warning,
         });
       } else {
-        res.redirect("/gallery");
+        res.redirect("/showGallery");
       }
     })
     .catch((error) => {
@@ -89,7 +89,7 @@ exports.updateEditImage = (req, res, next) => {
   GalleryModels.findById(getId)
     .then((result) => {
       if (!result) {
-        res.redirect("/gallery");
+        res.redirect("/showGallery");
       } else {
         const getUpdateURl = result.image.forEach((list) => {
           if (list == existinImage) {
@@ -143,7 +143,7 @@ exports.postFileUpload = (req, res, next) => {
       .save()
       .then((success) => {
         req.flash("message", "file uploaded successfully,upload again");
-        res.redirect("/gallery");
+        res.redirect("/showGallery");
       })
       .catch((error) => {
         console.log(error);
