@@ -46,7 +46,7 @@ app.use("/gallery", express.static(path.join(__dirname, "gallery")));
 app.use(express.static(path.join(__dirname)));
 app.set("view engine", "ejs");
 app.set("views", "views");
-app.use("/", router);
+app.use("/User", router);
 app.get("/", (req, res, next) => {
   res.send("<h2>welcome to gallery</h2>");
 });
