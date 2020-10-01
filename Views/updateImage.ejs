@@ -1,0 +1,44 @@
+<style>
+  .wrapper {
+    text-align: center;
+    width: 650px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  img {
+    width: 600px;
+    height: 400px;
+    object-fit: contain;
+    margin-bottom: 10px;
+  }
+  .header h2 {
+    text-align: center;
+  }
+
+  .header a {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #000;
+    border: 2px solid #000;
+    text-decoration: none;
+    padding: 5px;
+    border-radius: 4px;
+  }
+
+  .header {
+    position: relative;
+  }
+</style>
+
+<div class="warning"><%= message %></div>
+<div class="wrapper">
+  <h3><%= response.name %></h3>
+  <img src="/<%= imagePath %>" alt="image" class="" />
+  <form method="POST" action="/replacePostImage" enctype="multipart/form-data">
+    <input type="hidden" name="_id" value="<%= response._id %>" />
+    <input type="hidden" name="existinImage" value="<%= imagePath %>" />
+    <input type="file" name="image" id="image" />
+    <button type="submit">Upload image</button>
+  </form>
+</div>
