@@ -128,19 +128,29 @@ exports.postFileUpload = (req, res, next) => {
   if (!req.files) {
     req.flash("message", "Please upload valid image type");
   } else {
-    let imageCollectionPath = [];
-    req.files.forEach((list) => {
-      imageCollectionPath.push(list.path);
-    });
-    const gallerySave = new GalleryModels({
-      name: "maharajan",
-      image: imageCollectionPath,
-    });
-
-    gallerySave
-      .save()
-      .then((success) => {
-        req.flash("message", "file uploaded successfully,upload again");
+    GalleryModels.findOne()
+      .then((result) => {
+        if (!result) {
+          let imageCollectionPath = [];
+          req.files.forEach((list) => {
+            imageCollectionPath.push(list.path);
+          });
+          const gallerySave = new GalleryModels({
+            name: "maharajan",
+            image: imageCollectionPath,
+          });
+          gallerySave.save().then((success) => {
+            req.flash("message", "file uploaded successfully,upload again");
+            res.redirect("/showGallery");
+          });
+        } else {
+          req.files.forEach((list) => {
+            result.image.push(list.path);
+          });
+          return result.save();
+        }
+      })
+      .then((result) => {
         res.redirect("/showGallery");
       })
       .catch((error) => {
