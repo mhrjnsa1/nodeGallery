@@ -82,7 +82,6 @@ exports.editImageView = (req, res, next) => {
 };
 exports.updateEditImage = (req, res, next) => {
   const getImage = req.files;
-  console.log(req.files);
   const getId = req.body._id;
   const existinImage = req.body.existinImage;
 
@@ -91,20 +90,19 @@ exports.updateEditImage = (req, res, next) => {
       if (!result) {
         res.redirect("/showGallery");
       } else {
-        const getUpdateURl = result.image.forEach((list) => {
-          if (list == existinImage) {
+        const updateImageList = result.image.map((list) => {
+          if (list.toString() == existinImage.toString()) {
             list = getImage[0].path;
           }
           return list;
         });
-
-        result.image = getUpdateURl;
+        result.image = updateImageList;
         return result.save();
       }
     })
     .then((success) => {
       req.flash("warning", "successgully you have updated the image");
-      res.redirect("/replaceImage/" + getId);
+      res.redirect("/showGallery");
     })
     .catch((error) => {
       console.log(error);
@@ -154,20 +152,6 @@ exports.postFileUpload = (req, res, next) => {
 exports.downloadDocument = (req, res, next) => {
   const documentPath = path.join("documents", "document.pdf");
   const pdfGenerateCtr = new Pdfgenerate();
-  const countObj = [
-    {
-      name: "maharajan",
-      amount: 33,
-    },
-    {
-      name: "maharajan 1",
-      amount: 55,
-    },
-    {
-      name: "maharajan 2",
-      amount: 66,
-    },
-  ];
   res.setHeader("Content-Type", "application/pdf");
   res.setHeader("Content-Disposition", 'inline;filename="document.pdf"');
   //   file.pipe(res);
@@ -175,20 +159,34 @@ exports.downloadDocument = (req, res, next) => {
   pdfGenerateCtr.pipe(res);
   // Measure the text
 
-  pdfGenerateCtr.fontSize(26).fillColor("red").text("Invoice", {
-    underline: true,
-    align: "center",
-  });
-  countObj.forEach((list) => {
-    pdfGenerateCtr
-      .fillColor("#000")
-      .fontSize(16)
-      .text(list.name + "-" + list.amount);
-  });
-  pdfGenerateCtr.image("gallery/1601532332907-image.png", { width: 300 });
-  pdfGenerateCtr.text("Another link!", {
-    link: "http://apple.com/",
-    underline: true,
-  });
-  pdfGenerateCtr.end();
+  GalleryModels.findOne()
+    .then((result) => {
+      pdfGenerateCtr
+        .fontSize(26)
+        .fillColor("red")
+        .text(result.name + " Gallery", {
+          underline: true,
+          align: "center",
+        });
+      result.image.forEach((list, index) => {
+        if (index == 0) {
+          pdfGenerateCtr.image(list, 60, 0, {
+            fit: [500, 500],
+            valign: "center",
+            align: "center",
+          });
+        } else {
+          pdfGenerateCtr.addPage().image(list, 60, 0, {
+            fit: [500, 500],
+
+            align: "center",
+            valign: "center",
+          });
+        }
+      });
+      pdfGenerateCtr.end();
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
