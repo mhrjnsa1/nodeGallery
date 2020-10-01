@@ -52,7 +52,9 @@ app.set("views", path.join(__dirname, "./Views"));
 app.use("/", router);
 const port = process.env.PORT || 3000;
 app.get("/", (req, res, next) => {
-  res.send(port + "<h2>page not found</h2>");
+  res.send(
+    `<h2>page not found!! try this url : <a href="//${req.hostname}/showGallery">Gallery</a></h2>`
+  );
 });
 
 app.listen(port);
