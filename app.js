@@ -11,7 +11,7 @@ mongoose.connect(
   "mongodb+srv://mongooseDb:mongooseDb@mongocluster.9u2ud.mongodb.net/Gallery?retryWrites=true&w=majority"
 );
 app.use(express.urlencoded({ extended: false }));
-// app.use(expressLayouts);
+app.use(expressLayouts);
 app.use(
   session({
     secret: "my secret",
