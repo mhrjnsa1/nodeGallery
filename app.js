@@ -21,7 +21,7 @@ app.use(
 );
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "gallery");
+    cb(null, "ImageCollection");
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + "-" + file.originalname);
@@ -42,7 +42,10 @@ app.use(flash());
 app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).array("image", 10)
 );
-app.use("/gallery", express.static(path.join(__dirname, "gallery")));
+app.use(
+  "/ImageCollection",
+  express.static(path.join(__dirname, "ImageCollection"))
+);
 app.use(express.static(path.join(__dirname)));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "./Views"));
