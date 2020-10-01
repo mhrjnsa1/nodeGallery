@@ -45,7 +45,10 @@ app.use(
 app.use("/gallery", express.static(path.join(__dirname, "gallery")));
 app.use(express.static(path.join(__dirname)));
 app.set("view engine", "ejs");
-app.set("views", "/views");
+app.set("views", "views");
 app.use("/", router);
+app.get("/", (req, res, next) => {
+  res.send(<h2>welcome to gallery</h2>);
+});
 const port = process.env.PORT || 3000;
 app.listen(port);
